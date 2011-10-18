@@ -1,7 +1,5 @@
 //
-//  EEDelegateCluster.m
-//
-//  Created by Eric-Paul Lecluse.
+//  Created by Eric-Paul Lecluse @ 2011.
 //
 
 #import "EEDelegateCluster.h"
@@ -13,6 +11,7 @@
 @end
 @implementation EEDelegateCluster
 
+@synthesize callDelegatesOnMainThread = callDelegatesOnMainThread_;
 @synthesize delegatePointers = delegatePointers_;
 
 - (id)init
@@ -20,6 +19,7 @@
     self = [super init];
     if (self) {
         self.delegatePointers = [NSMutableSet set];
+        self.callDelegatesOnMainThread = YES;
     }
     
     return self;
@@ -67,16 +67,26 @@
 
 - (void)performBlockOnDelegates:(void (^)(id delegate))delegateBlock
 {
-    dispatch_queue_t main = dispatch_get_main_queue();
+    dispatch_queue_t queue = self.callDelegatesOnMainThread ? dispatch_get_main_queue() : dispatch_get_current_queue();
     
     for (NSValue *delegateValue in self.delegatePointers) {
         __block id delegate = [delegateValue pointerValue];
-        dispatch_async(main, ^{
+        dispatch_async(queue, ^{
             NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
             delegateBlock(delegate);
             [pool release];
         });
     }
+}
+
+- (void)performBlockOnDelegates:(void (^)(id delegate))delegateBlock afterDelay:(NSTimeInterval)delay
+{
+    dispatch_queue_t queue = self.callDelegatesOnMainThread ? dispatch_get_main_queue() : dispatch_get_current_queue();
+    
+    int64_t delta = (int64_t)(1.0e9 * delay);
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, delta), queue, ^{
+        [self performBlockOnDelegates:delegateBlock];
+    });
 }
 
 - (NSInteger)count

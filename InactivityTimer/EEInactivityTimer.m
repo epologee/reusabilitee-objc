@@ -1,7 +1,5 @@
 //
-//  EEInactivityTimer.m
-//
-//  Created by Eric-Paul Lecluse @ 2011
+//  Created by Eric-Paul Lecluse @ 2011.
 //
 
 #import "EEInactivityTimer.h"

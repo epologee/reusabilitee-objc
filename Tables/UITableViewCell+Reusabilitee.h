@@ -1,8 +1,5 @@
 //
-//  UITableViewCell+Convenience.h
-//
-//  Created by Eric-Paul Lecluse on 19-06-11.
-//  Copyright 2011 epologee. All rights reserved.
+//  Created by Eric-Paul Lecluse @ 2011.
 //
 
 #import <Foundation/Foundation.h>
