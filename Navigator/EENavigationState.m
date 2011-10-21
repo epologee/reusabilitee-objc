@@ -37,7 +37,7 @@
     self = [super init];
     
     if (self) {
-        self.segments = [segments mutableCopy];
+        self.segments = [[segments mutableCopy] autorelease];
     }
     
     return self;
@@ -55,7 +55,7 @@
 }
 
 -(void)setPath:(NSString *)path {
-    self.segments = [[[path stringByReplacingOccurrencesOfString:@" " withString:@"-"] componentsSeparatedByString:@"/"] mutableCopy];
+    self.segments = [[[[path stringByReplacingOccurrencesOfString:@" " withString:@"-"] componentsSeparatedByString:@"/"] mutableCopy] autorelease];
 }
 
 -(void)setSegments:(NSMutableArray *)segments {

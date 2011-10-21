@@ -157,8 +157,8 @@
                 
                 if ([responder respondsToSelector:@selector(validate:)]) {
                     valid = [responder validate:truncated];
-                } else if ([responder respondsToSelector:@selector(validateFull:andTruncated:)]) {
-                    valid = [responder validateFull:self.current andTruncated:truncated];
+                } else if ([responder respondsToSelector:@selector(validateFull:truncated:)]) {
+                    valid = [responder validateFull:self.current truncated:truncated];
                 }
                 
                 if (valid) {
@@ -232,8 +232,8 @@
             for (id<EEUpdateBehavior>responder in responders) {
                 if ([responder respondsToSelector:@selector(update:)]) {
                     [responder update:truncated];
-                } else if ([responder respondsToSelector:@selector(updateFull:andTruncated:)]) {
-                    [responder updateFull:self.current andTruncated:truncated];
+                } else if ([responder respondsToSelector:@selector(updateFull:truncated:)]) {
+                    [responder updateFull:self.current truncated:truncated];
                 }
             }
         }

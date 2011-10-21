@@ -6,15 +6,17 @@
 
 @implementation NSManagedObjectContext (Reusabilitee)
 
-- (void)simpleSave
+- (NSError *)simpleSave
 {
-    NSError *error;
+    NSError *error = nil;
+
     if ([self save:&error]) {
         DLog(@"Context saved.");
-        return;   
+        return nil;
     }
-    
+
     ELog(@"Error saving context due to %i: \"%@\" with user info: %@", error.code, [error.userInfo objectForKey:NSLocalizedDescriptionKey], error.userInfo);
+    return error;
 }
 
 - (id)uniqueEntityForName:(NSString *)name withValue:(id)value forKey:(NSString *)key 

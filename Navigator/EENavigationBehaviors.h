@@ -27,7 +27,7 @@ typedef enum {
 @optional
 // Only one of these methods will be called, so don't implement both.
 -(void)update:(EENavigationState *)truncated;
--(void)updateFull:(EENavigationState *)full andTruncated:(EENavigationState *)truncated;
+-(void)updateFull:(EENavigationState *)full truncated:(EENavigationState *)truncated;
 
 @end
 
@@ -36,6 +36,6 @@ typedef enum {
 @optional
 // Only one of these methods will be called, so don't implement both.
 -(BOOL)validate:(EENavigationState *)truncated;
--(BOOL)validateFull:(EENavigationState *)full andTruncated:(EENavigationState *)truncated;
+-(BOOL)validateFull:(EENavigationState *)full truncated:(EENavigationState *)truncated;
 
 @end

@@ -10,7 +10,7 @@
 /**
  Saves the context and logs an error message when it fails.
  */
-- (void)simpleSave;
+- (NSError *)simpleSave;
 
 /**
  finds or creates a unique NSManagedObject for the given key/value pair.

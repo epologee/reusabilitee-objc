@@ -134,7 +134,6 @@
 
 - (NSManagedObjectContext *)mainContext 
 {
-    
     if (mainContext_ == nil) {
         self.mainContext = [[self newContext] autorelease];
     }
@@ -150,7 +149,7 @@
     //  + inserted
     //  + updated
     //
-    DLog(@"Changes: %@", saveNotification.userInfo);
+    //    DLog(@"Changes: %@", saveNotification.userInfo);
     [self.mainContext mergeChangesFromContextDidSaveNotification:saveNotification];
 }
 
