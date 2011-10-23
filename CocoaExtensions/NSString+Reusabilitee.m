@@ -13,7 +13,7 @@
 
 + (BOOL)isNotEmpty:(NSString *)string
 {
-    return (string != nil) && ![@"" isEqualToString:string];
+    return ![self isEmpty:string];
 }
 
 - (NSString *)formattedWith:(NSString *)arguments, ...
