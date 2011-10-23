@@ -36,31 +36,39 @@
 
 @implementation EENavigator
 
-@synthesize statusByResponder=statusByResponder_;
-@synthesize showByPath=showByPath_, updateByPath=updateByPath_, validateByPath=validateByPath_;
-@synthesize current=current_;
+@synthesize current = current_;
+@synthesize showByPath = showByPath_;
+@synthesize updateByPath = updateByPath_;
+@synthesize validateByPath = validateByPath_;
+@synthesize statusByResponder = statusByResponder_;
 
 + (EENavigator *)sharedNavigator 
 {
-    static EENavigator *sharedInstance;
-    
-    if (sharedInstance == nil) {
-        sharedInstance = [[EENavigator alloc] init];
-    }
-    
-    return sharedInstance;
+    return [self instance];
 }
 
 - (id)init 
 {
     self = [super init];
+    
     if (self) {
         self.showByPath = [[[NSMutableDictionary alloc] init] autorelease];
         self.updateByPath = [[[NSMutableDictionary alloc] init] autorelease];
         self.validateByPath = [[[NSMutableDictionary alloc] init] autorelease];
         self.statusByResponder = [[[EEStatusByResponder alloc] init] autorelease];
     }
+    
     return self;
+}
+
+- (void)dealloc {
+    self.current = nil;
+    self.showByPath = nil;
+    self.updateByPath = nil;
+    self.validateByPath = nil;
+    self.statusByResponder = nil;
+    
+    [super dealloc];
 }
 
 - (void)add:(id<EENavigationBehavior>)responder toState:(EENavigationState *)state 

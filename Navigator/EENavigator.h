@@ -6,10 +6,11 @@
 #import "EENavigationState.h"
 #import "EENavigationBehaviors.h"
 #import "EEStatusByResponder.h"
+#import "EESingleton.h"
 
 @class EENavigationState;
 
-@interface EENavigator : NSObject
+@interface EENavigator : EESingleton
 
 @property (nonatomic, retain) EENavigationState *current;
 
