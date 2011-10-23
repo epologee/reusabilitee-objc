@@ -48,12 +48,12 @@ typedef enum {
  */
 @property (nonatomic) BOOL instantDelegation;
 
-+ (NSString *)identifierForName:(NSString *)name andContext:(id)context;
++ (NSString *)identifierForName:(NSString *)name context:(id)context;
 
 /**
  @param context will always be used as an NSString internally, but if you pass any other object, it's description-message will be used.
  */
-- (id)initWithName:(NSString *)name andContext:(id)context;
+- (id)initWithName:(NSString *)name context:(id)context;
 
 #pragma mark -
 #pragma mark Delegation

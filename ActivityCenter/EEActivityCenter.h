@@ -15,7 +15,7 @@
 #pragma mark -
 #pragma mark Delegation
 
-- (void)setDelegate:(id <ActivityDelegate>)delegate forActivity:(NSString *)name andContext:(NSString *)context;
+- (void)setDelegate:(id <ActivityDelegate>)delegate forActivity:(NSString *)name context:(NSString *)context;
 
 - (void)invalidateDelegate:(id <ActivityDelegate>)delegate;
 

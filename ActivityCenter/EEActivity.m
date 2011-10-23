@@ -32,7 +32,7 @@
 @synthesize feedbackOptions = feedbackOptions_;
 @synthesize instantDelegation = instantDelegation_;
 
-+ (NSString *)identifierForName:(NSString *)name andContext:(id)context
++ (NSString *)identifierForName:(NSString *)name context:(id)context
 {
     if (context != nil)
     {
@@ -42,7 +42,7 @@
     return [NSString stringWithFormat:@"%@", name];
 }
 
-- (id)initWithName:(NSString *)name andContext:(id)context
+- (id)initWithName:(NSString *)name context:(id)context
 {
     self = [super init];
 
@@ -50,7 +50,7 @@
     {
         self.name = name;
         self.context = context;
-        self.identifier = [[self class] identifierForName:name andContext:context];
+        self.identifier = [[self class] identifierForName:name context:context];
         self.status = kActivityStatusReady;
         self.progress = 0;
         self.keepHistory = NO;

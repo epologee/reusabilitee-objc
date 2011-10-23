@@ -47,7 +47,7 @@
 #pragma mark -
 #pragma mark Delegation
 
-- (void)setDelegate:(id <ActivityDelegate>)delegate forActivity:(NSString *)name andContext:(NSString *)context
+- (void)setDelegate:(id <ActivityDelegate>)delegate forActivity:(NSString *)name context:(NSString *)context
 {
     [[self activityWithName:name context:context] addDelegate:delegate];
 }
@@ -75,7 +75,7 @@
 
 - (EEActivity *)activityWithName:(NSString *)name context:(id)context
 {
-    NSString *identifier = [EEActivity identifierForName:name andContext:context];
+    NSString *identifier = [EEActivity identifierForName:name context:context];
     
     for (EEActivity *activity in self.activities) {
         if ([activity.identifier isEqualToString:identifier])
@@ -84,7 +84,7 @@
         }
     }
     
-    EEActivity *activity = [[[EEActivity alloc] initWithName:name andContext:context] autorelease];
+    EEActivity *activity = [[[EEActivity alloc] initWithName:name context:context] autorelease];
     [self.activities addObject:activity];
     [activity addDelegate:self];
     return activity;
