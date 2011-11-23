@@ -4,6 +4,8 @@
 
 #import <UIKit/UIKit.h>
 
+#define LIMIT(X, A, B) MAX(A, MIN(X, B))
+
 typedef enum {
     kAlignNone = 0,
     kAlignLeft = 1,
@@ -25,5 +27,10 @@ typedef enum {
 +(CGRect)rectWithOrigin:(CGPoint)origin size:(CGSize)size;
 +(CGRect)trimRect:(CGRect)rect top:(CGFloat)top left:(CGFloat)left bottom:(CGFloat)bottom right:(CGFloat)right;
 
+#pragma mark -
+#pragma mark Image drawing
+
++ (void)drawImage:(CGImageRef)image inRect:(CGRect)rect ofContext:(CGContextRef)context;
++ (void)drawStretchableImage:(CGImageRef)image withLeftCapWidth:(NSInteger)leftCapWidth topCapHeight:(NSInteger)topCapHeight scale:(CGFloat)scale inRect:(CGRect)rect ofContext:(CGContextRef)context;
 
 @end
