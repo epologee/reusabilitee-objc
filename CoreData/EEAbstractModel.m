@@ -7,8 +7,6 @@
 
 @interface EEAbstractModel ()
 
-@property (nonatomic, copy) NSString *modelName;
-@property (nonatomic, copy) NSString *storeFileName;
 @property (nonatomic, copy, readwrite) NSString *documentsDirectory;
 @property (nonatomic, copy, readwrite) NSString *cachesDirectory;
 
@@ -95,23 +93,26 @@
 
 - (NSPersistentStoreCoordinator *)persistentStoreCoordinator 
 {
-    if (persistentStoreCoordinator_ == nil) {
-        
-        NSError *error = nil;
-        NSInteger attempts = 3;
-        persistentStoreCoordinator_ = [[NSPersistentStoreCoordinator alloc] initWithManagedObjectModel:[self managedObjectModel]];
-        NSDictionary *options = [NSDictionary dictionaryWithObjectsAndKeys:
-                                 [NSNumber numberWithBool:YES], NSMigratePersistentStoresAutomaticallyOption, 
-                                 [NSNumber numberWithBool:YES], NSInferMappingModelAutomaticallyOption, 
-                                 nil];
-        
-        NSURL *storeURL = self.storeURL;
-        while (![persistentStoreCoordinator_ addPersistentStoreWithType:NSSQLiteStoreType configuration:nil URL:storeURL options:options error:&error] && --attempts >= 0) {
-            [self resolvePersistentStoreError:error forStoreURL:storeURL];
+    @synchronized(self)
+    {
+        if (persistentStoreCoordinator_ == nil) {
+            
+            NSError *error = nil;
+            NSInteger attempts = 3;
+            self.persistentStoreCoordinator = [[[NSPersistentStoreCoordinator alloc] initWithManagedObjectModel:[self managedObjectModel]] autorelease];
+            NSDictionary *options = [NSDictionary dictionaryWithObjectsAndKeys:
+                                     [NSNumber numberWithBool:YES], NSMigratePersistentStoresAutomaticallyOption, 
+                                     [NSNumber numberWithBool:YES], NSInferMappingModelAutomaticallyOption, 
+                                     nil];
+            
+            NSURL *storeURL = self.storeURL;
+            while (![persistentStoreCoordinator_ addPersistentStoreWithType:NSSQLiteStoreType configuration:nil URL:storeURL options:options error:&error] && --attempts >= 0) {
+                [self resolvePersistentStoreError:error forStoreURL:storeURL];
+            }
         }
+        
+        return persistentStoreCoordinator_;
     }
-    
-    return persistentStoreCoordinator_;
 }
 
 - (NSManagedObjectModel *)managedObjectModel 
@@ -184,7 +185,7 @@
     NSArray *objects = [self existingObjectsWithIDs:objectIDs error:&error];
     if (objects == nil)
     {
-        ELog(@"Could not get all existing objects: %@", error);
+        ELog(@"Could not dayNumeral all existing objects: %@", error);
     }
     
     return objects;

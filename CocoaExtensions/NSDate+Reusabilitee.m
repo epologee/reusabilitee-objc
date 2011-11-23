@@ -4,6 +4,31 @@
 
 #import "NSDate+Reusabilitee.h"
 
+@implementation NSCalendar (Reusabilitee)
+
+static NSCalendar *cal_ = nil;
+
++ (NSCalendar *)fastCalendar
+{
+    @synchronized(self)
+    {
+        if (cal_ == nil)
+        {
+            cal_ = [[NSCalendar currentCalendar] retain];
+        }
+        
+        return cal_;
+    }
+}
+
++ (void)releaseFastCalendar
+{
+    [cal_ release];
+    cal_ = nil;
+}
+
+@end
+
 @implementation NSDate (Reusabilitee)
 
 + (NSInteger)firstWeekDay
@@ -15,7 +40,7 @@
 
 - (NSDate *)firstSecondOfTheDay
 {
-    NSCalendar *cal = [NSCalendar currentCalendar];
+    NSCalendar *cal = [NSCalendar fastCalendar];
     
     NSDate *beginning = nil;
     if (![cal rangeOfUnit:NSDayCalendarUnit startDate:&beginning interval:NULL forDate:self])
@@ -28,7 +53,7 @@
 
 - (NSDate *)lastSecondOfTheDay
 {
-    NSCalendar *cal = [NSCalendar currentCalendar];
+    NSCalendar *cal = [NSCalendar fastCalendar];
     
     NSDateComponents *oneDay = [[[NSDateComponents alloc] init] autorelease];
     [oneDay setDay:1];
@@ -39,7 +64,7 @@
 
 - (NSDate *)firstSecondOfTheWeek
 {
-    NSCalendar *cal = [NSCalendar currentCalendar];
+    NSCalendar *cal = [NSCalendar fastCalendar];
     
     NSDate *beginning = nil;
     if (![cal rangeOfUnit:NSWeekCalendarUnit startDate:&beginning interval:NULL forDate:self])
@@ -52,7 +77,7 @@
 
 - (NSDate *)lastSecondOfTheWeek
 {
-    NSCalendar *cal = [NSCalendar currentCalendar];
+    NSCalendar *cal = [NSCalendar fastCalendar];
     
     NSDateComponents *oneWeek = [[[NSDateComponents alloc] init] autorelease];
     [oneWeek setWeek:1];
@@ -63,7 +88,7 @@
 
 - (NSDate *)firstSecondOfTheMonth
 {
-    NSCalendar *cal = [NSCalendar currentCalendar];
+    NSCalendar *cal = [NSCalendar fastCalendar];
     
     NSDate *beginning = nil;
     if (![cal rangeOfUnit:NSMonthCalendarUnit startDate:&beginning interval:NULL forDate:self])
@@ -76,7 +101,7 @@
 
 - (NSDate *)lastSecondOfTheMonth
 {
-    NSCalendar *cal = [NSCalendar currentCalendar];
+    NSCalendar *cal = [NSCalendar fastCalendar];
     
     NSDateComponents *oneMonth = [[[NSDateComponents alloc] init] autorelease];
     [oneMonth setMonth:1];
@@ -87,7 +112,7 @@
 
 - (NSDate *)firstSecondOfTheYear
 {
-    NSCalendar *cal = [NSCalendar currentCalendar];
+    NSCalendar *cal = [NSCalendar fastCalendar];
     
     NSDate *beginning = nil;
     if (![cal rangeOfUnit:NSYearCalendarUnit startDate:&beginning interval:NULL forDate:self])
@@ -100,7 +125,7 @@
 
 - (NSDate *)lastSecondOfTheYear
 {
-    NSCalendar *cal = [NSCalendar currentCalendar];
+    NSCalendar *cal = [NSCalendar fastCalendar];
     
     NSDateComponents *oneYear = [[[NSDateComponents alloc] init] autorelease];
     [oneYear setYear:1];
@@ -111,7 +136,7 @@
 
 - (NSDate *)units:(NSInteger)units laterForCalendarUnit:(NSCalendarUnit)calendarUnit
 {
-    NSCalendar *cal = [NSCalendar currentCalendar];
+    NSCalendar *cal = [NSCalendar fastCalendar];
     
     NSDateComponents *oneUnit = [[[NSDateComponents alloc] init] autorelease];
     switch (calendarUnit) {
@@ -132,14 +157,24 @@
     return [cal dateByAddingComponents:oneUnit toDate:self options:0];
 }
 
+- (NSDate *)units:(NSInteger)units earlierForCalendarUnit:(NSCalendarUnit)calendarUnit
+{
+    return [self units:-units laterForCalendarUnit:calendarUnit];
+}
+
+- (BOOL)isEqualToDate:(NSDate *)otherDate forUnits:(NSCalendarUnit)units
+{
+    NSCalendar *cal = [NSCalendar fastCalendar];
+    
+    NSDateComponents *simpleSelf = [cal components:units fromDate:self];
+    NSDateComponents *simpleOtherDate = [cal components:units fromDate:otherDate];
+    
+    return [simpleSelf isEqual:simpleOtherDate];
+}
+
 - (BOOL)isOnSameDayAs:(NSDate *)date
 {
-    NSCalendar *cal = [NSCalendar currentCalendar];
-    
-    NSDateComponents *simpleSelf = [cal components:NSYearCalendarUnit | NSMonthCalendarUnit | NSDayCalendarUnit fromDate:self];
-    NSDateComponents *simpleDate = [cal components:NSYearCalendarUnit | NSMonthCalendarUnit | NSDayCalendarUnit fromDate:date];
-
-    return [simpleSelf isEqual:simpleDate];
+    return [self isEqualToDate:date forUnits:NSYearCalendarUnit | NSMonthCalendarUnit | NSDayCalendarUnit];
 }
 
 @end

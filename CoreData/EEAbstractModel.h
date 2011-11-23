@@ -5,6 +5,9 @@
 #import "EESingleton.h"
 
 @interface EEAbstractModel : EESingleton
+{
+    NSPersistentStoreCoordinator *persistentStoreCoordinator_;
+}
 
 @property (nonatomic, retain) NSManagedObjectContext *mainContext;
 @property (nonatomic, retain) NSManagedObjectModel *managedObjectModel;
@@ -16,6 +19,8 @@
 @property (nonatomic, copy, readonly) NSString *documentsDirectory;
 @property (nonatomic, copy, readonly) NSString *cachesDirectory;
 @property (nonatomic, copy, readonly) NSURL *storeURL;
+@property (nonatomic, copy) NSString *modelName;
+@property (nonatomic, copy) NSString *storeFileName;
 
 /**
  Designated initializer. Call this one from your concrete `init` method.

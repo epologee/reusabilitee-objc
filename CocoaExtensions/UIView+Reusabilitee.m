@@ -10,11 +10,32 @@
 
 @implementation UIView (Reusabilitee)
 
-+ (UIView *)autoresizingViewWithFrame:(CGRect)frame
++ (id)autoresizingViewWithFrame:(CGRect)frame
+{
+    return [self viewWithFrame:frame autoresizing:UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight];
+}
+
++ (id)viewWithFrame:(CGRect)frame autoresizing:(UIViewAutoresizing)mask
 {
     UIView *view = [[[self alloc] initWithFrame:frame] autorelease];
-    view.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+    view.autoresizingMask = mask;
     return view;
+}
+
+- (BOOL)pointInsideSubviews:(CGPoint)point withEvent:(UIEvent *)event
+{
+    for (UIView *subview in self.subviews) {
+        CGPoint localPoint = point;
+        localPoint.x -= subview.frame.origin.x;
+        localPoint.y -= subview.frame.origin.y;
+        
+        if ([subview pointInside:localPoint withEvent:event])
+        {
+            return YES;
+        }
+    }
+    
+    return NO;
 }
 
 @end
