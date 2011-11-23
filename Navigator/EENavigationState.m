@@ -6,8 +6,8 @@
 
 @interface EENavigationState ()
 
--(id)initWithString:(NSString *)path;
--(id)initWithSegments:(NSArray *)segments;
+- (id)initWithString:(NSString *)path;
+- (id)initWithSegments:(NSArray *)segments;
 
 @end
 
@@ -15,15 +15,15 @@
 
 @synthesize segments=segments_;
 
-+(EENavigationState *)stateWithString:(NSString *)path {
++ (EENavigationState *)stateWithString:(NSString *)path {
     return [[[EENavigationState alloc] initWithString:path] autorelease];
 }
 
-+(EENavigationState *)stateWithSegments:(NSArray *)segments {
++ (EENavigationState *)stateWithSegments:(NSArray *)segments {
     return [[[EENavigationState alloc] initWithSegments:segments] autorelease];
 }
 
--(id)initWithString:(NSString *)path {
+- (id)initWithString:(NSString *)path {
     self = [super init];
     
     if (self) {
@@ -33,7 +33,7 @@
     return self;
 }
 
--(id)initWithSegments:(NSArray *)segments {
+- (id)initWithSegments:(NSArray *)segments {
     self = [super init];
     
     if (self) {
@@ -43,22 +43,22 @@
     return self;
 }
 
--(void)dealloc {
+- (void)dealloc {
     self.segments = nil;
     
     [super dealloc];
 }
 
--(NSString *)path {
+- (NSString *)path {
     if ([self.segments count] == 0) return @"/";
     return [NSString stringWithFormat:@"/%@/", [self.segments componentsJoinedByString:@"/"]];
 }
 
--(void)setPath:(NSString *)path {
+- (void)setPath:(NSString *)path {
     self.segments = [[[[path stringByReplacingOccurrencesOfString:@" " withString:@"-"] componentsSeparatedByString:@"/"] mutableCopy] autorelease];
 }
 
--(void)setSegments:(NSMutableArray *)segments {
+- (void)setSegments:(NSMutableArray *)segments {
     [segments_ release];
 
     if (segments != nil) {
@@ -78,11 +78,11 @@
     segments_ = nil;
 }
 
--(BOOL)equals:(EENavigationState *)foreign {
+- (BOOL)equals:(EENavigationState *)foreign {
     return [self contains:foreign] && [foreign contains:self];
 }
 
--(BOOL)contains:(EENavigationState *)foreign {
+- (BOOL)contains:(EENavigationState *)foreign {
     if ([foreign.segments count] > [self.segments count]) return NO;
     
     int index = 0;
@@ -100,7 +100,7 @@
     return YES;
 }
 
--(BOOL)hasWildcards {
+- (BOOL)hasWildcards {
     NSUInteger index = [self.segments indexOfObjectWithOptions:NSEnumerationConcurrent passingTest:^BOOL(id obj, NSUInteger idx, BOOL *stop) {
         return [obj isEqualToString:@"*"];
     }];
@@ -109,19 +109,19 @@
 }
 
 -(EENavigationState *)mask:(EENavigationState *)mask {
-    NSMutableArray *unmasked = [[self.segments mutableCopy] autorelease];
+    NSMutableArray *segmentsToMask = [[self.segments mutableCopy] autorelease];
     
     int length = MIN([self.segments count], [mask.segments count]);
     for (int i = 0; i < length; i++) {
-        if ([[unmasked objectAtIndex:i] isEqualToString:@"*"]) {
-            [unmasked replaceObjectAtIndex:i withObject:[mask.segments objectAtIndex:i]];
+        if ([[segmentsToMask objectAtIndex:i] isEqualToString:@"*"]) {
+            [segmentsToMask replaceObjectAtIndex:i withObject:[mask.segments objectAtIndex:i]];
         }
     }
     
-    return [EENavigationState stateWithSegments:unmasked];
+    return [EENavigationState stateWithSegments:segmentsToMask];
 }
 
--(EENavigationState *)truncate:(EENavigationState *)operand {
+- (EENavigationState *)truncate:(EENavigationState *)operand {
     if (![self contains:operand]) return nil;
     
     EENavigationState *truncated = [EENavigationState stateWithSegments:self.segments];
@@ -130,12 +130,13 @@
     return truncated;
 }
 
--(EENavigationState *)append:(NSString *)path {
-    return [[self.path stringByAppendingString:path] toState];
+- (EENavigationState *)append:(NSString *)path {
+    NSParameterAssert(path);
+    return [[self.path stringByAppendingString:path] stateFromPath];
 }
 
--(EENavigationState *)shortenTo:(NSUInteger)segmentLength {
-    EENavigationState *shortened = [self.segments toState];
+- (EENavigationState *)shortenTo:(NSUInteger)segmentLength {
+    EENavigationState *shortened = [self.segments stateFromSegments];
     
     while ([shortened.segments count] > segmentLength) {
         [shortened.segments removeLastObject];
@@ -144,8 +145,29 @@
     return shortened;
 }
 
--(NSString *)description {
+- (id)copyWithZone:(NSZone *)zone
+{
+    return [[EENavigationState alloc] initWithSegments:self.segments];
+}
+
+- (NSString *)description {
     return [NSString stringWithFormat:@"[State: %@]", self.path];
+}
+
+@end
+
+@implementation NSString (EENavigationState)
+
+- (EENavigationState *)stateFromPath {
+    return [EENavigationState stateWithString:self];
+}
+
+@end
+
+@implementation NSArray (EENavigationState)
+
+-(EENavigationState *)stateFromSegments {
+    return [EENavigationState stateWithSegments:self];
 }
 
 @end

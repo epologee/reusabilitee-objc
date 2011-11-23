@@ -17,8 +17,29 @@ typedef enum {
 
 @protocol EETransitionBehavior <EENavigationBehavior>
 
--(void)transitionIn;
--(void)transitionOut;
+@optional
+// Only one transitionIn~ and one transitionOut~ method will be called, so don't implement multiple.
+
+/**
+ Assumes instant completion
+ */
+- (void)transitionIn;
+- (void)transitionInWithFull:(EENavigationState *)full;
+- (void)transitionInWithFull:(EENavigationState *)full truncated:(EENavigationState *)truncated;
+
+/**
+ Call the completion block when your transition is complete, notifyTransitionComplete();
+ */
+- (void)transitionInWithCompletionBlock:(void (^)())notifyTransitionComplete;
+
+/**
+ Assumes instant completion
+ */
+- (void)transitionOut;
+/**
+ Call the completion block when your transition is complete, notifyTransitionComplete();
+ */
+- (void)transitionOutWithCompletionBlock:(void (^)())notifyTransitionComplete;
 
 @end
 
@@ -26,8 +47,9 @@ typedef enum {
 
 @optional
 // Only one of these methods will be called, so don't implement both.
--(void)update:(EENavigationState *)truncated;
--(void)updateFull:(EENavigationState *)full truncated:(EENavigationState *)truncated;
+- (void)updateWithTruncated:(EENavigationState *)truncated;
+- (void)updateWithFull:(EENavigationState *)full;
+- (void)updateWithFull:(EENavigationState *)full truncated:(EENavigationState *)truncated;
 
 @end
 
@@ -35,7 +57,7 @@ typedef enum {
 
 @optional
 // Only one of these methods will be called, so don't implement both.
--(BOOL)validate:(EENavigationState *)truncated;
--(BOOL)validateFull:(EENavigationState *)full truncated:(EENavigationState *)truncated;
+- (BOOL)validate:(EENavigationState *)truncated;
+- (BOOL)validateFull:(EENavigationState *)full truncated:(EENavigationState *)truncated;
 
 @end
