@@ -64,10 +64,6 @@
     return backView_;
 }
 
-- (UIView *)ivarContentView
-{
-    return contentView_;
-}
 - (UIView *)contentView
 {
     if (contentView_ == nil)

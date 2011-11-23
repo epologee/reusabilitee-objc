@@ -28,14 +28,14 @@
 
 #import <UIKit/UIKit.h>
 
-@interface FastCell : UITableViewCell {
+@interface FastCell : UITableViewCell
+{
     UIView *contentView_;
 }
 
 @property (nonatomic, retain) UIView* backView;
 @property (nonatomic, retain) UIView* contentView;
 
-- (UIView *)ivarContentView;
 - (void) drawContentView:(CGRect)r;
 
 @end
