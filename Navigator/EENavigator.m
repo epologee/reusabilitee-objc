@@ -4,7 +4,6 @@
 
 #import "EENavigator.h"
 #import "EEStatusByResponder.h"
-#import "PinchStats.h"
 
 #define MAX_HISTORY_COUNT 20
 
@@ -273,7 +272,6 @@
 - (void)grantRequest:(EENavigationState *)state {
     [self saveCurrentToHistory];
 
-    [PinchStats trackString:state.path];
     self.current = state;
     
     DLog(@"Granted %@ (history: %@)", state, [self.history subarrayWithRange:NSMakeRange(0, MIN([self.history count], 5))]);

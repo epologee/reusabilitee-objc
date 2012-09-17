@@ -4,7 +4,6 @@
 
 #import "EEGridViewCell.h"
 #import <QuartzCore/QuartzCore.h>
-#import "WOWDesignKit.h"
 
 @interface  EEGridViewCell  ()
 

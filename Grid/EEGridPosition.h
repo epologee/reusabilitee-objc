@@ -3,7 +3,6 @@
 //  wowcal
 //
 //  Created by Eric-Paul Lecluse on 18-11-11.
-//  Copyright (c) 2011 PINCH. All rights reserved.
 //
 
 #import <Foundation/Foundation.h>
